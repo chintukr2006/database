@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Record</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            background-color: #f3f4f6;
+        }
+        .border {
+            display: none;
+            padding: 30px;
+            border-radius: 15px;
+            width: 480px;
+            background: linear-gradient(145deg, #0077b6, #0096c7);
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.25), 
+                        -10px -10px 20px rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+        label {
+            margin: 5px 0;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.2),
+                        inset -5px -5px 10px rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+            background-color: #c3f2fc;
+        }
+        input[type="submit"] {
+            background: linear-gradient(145deg, #00b4d8, #0096c7);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3), 
+                        -5px -5px 15px rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        input[type="submit"]:hover {
+            background: linear-gradient(145deg, #0077b6, #005f8d);
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3), 
+                        -3px -3px 10px rgba(255, 255, 255, 0.2);
+        }
+        a {
+            margin-bottom: 90vh;
+            position: fixed;
+        }
+    </style>
+</head>
+<body>
+    <a href="#" id="show-input-link"></a>
+    <div class="border" id="input-container">
+        <h2>Student Information</h2>
+        <form method="POST" action="/add-record">
+            <label for="id">Id</label>
+            <input type="number" id="id" name="id" required>
+
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" required>
+
+            <label for="marks">Marks</label>
+            <input type="number" id="marks" name="marks" required>
+
+            <input type="submit" value="Add Record">
+        </form>
+    </div>
+    <script>
+        document.getElementById('show-input-link').addEventListener('click', function (event) {
+            event.preventDefault(); 
+            document.getElementById('input-container').style.display = 'block';
+        });
+
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+        recognition.interimResults = true;
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript.toLowerCase();
+            //console.log("Recognized text:", transcript);
+
+            if (transcript.includes("open")) {
+                document.getElementById('input-container').style.display = 'block';
+            }else if(transcript.includes("close")){
+                document.getElementById('input-container').style.display = 'none';
+            }
+        };
+
+        recognition.onend = () => {
+            recognition.start();
+        };
+
+        recognition.start();
+    </script>
+</body>
+</html>
